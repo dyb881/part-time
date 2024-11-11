@@ -7,7 +7,18 @@
 使用 workspaces 统合一个项目包含的所有端代码，可以灵活加减应用端，并且统一使用ts的情况下，可以跨应用端复用代码
 
 - 应用端
-	- 公共库、说明文档 part-time
-	- 服务端  nestjs
-	- pc网页端 react、antd
-	- H5、小程序 Taro
+	- 公共库、说明文档 => dumi
+	- 服务端 => nestjs
+	- pc网页端 => react、antd
+	- H5、小程序 => Taro
+
+## 项目结构
+
+命名结构：框架-应用端定位
+
+- dumi-tools => 公共库
+- nest-serve => 后端服务
+- react-admin => 管理后台
+- taro-mobile => 移动端（移动端网页、小程序）（待定）
+- react-web => 自适应网页（待定）
+- electron-desktop => 桌面端开发（待定）
