@@ -16,7 +16,7 @@
 
 命名结构：框架-应用端定位
 
-- dumi-tools => 公共库
+- dumi-tools => 公共库（part-time内支撑所有应用端的公共工具库）
 - nest-serve => 后端服务
 - react-admin => 管理后台
 - taro-mobile => 移动端（移动端网页、小程序）（待定）

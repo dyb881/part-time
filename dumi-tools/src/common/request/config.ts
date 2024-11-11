@@ -1,4 +1,11 @@
-import { Application, TConfig, TErrorTexts, TStatusCodeKeys, TMessageKeys, TSuccessCodes } from './types';
+import {
+  Application,
+  TConfig,
+  TErrorTexts,
+  TMessageKeys,
+  TStatusCodeKeys,
+  TSuccessCodes,
+} from './types';
 
 /**
  * 默认请求配置

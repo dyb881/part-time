@@ -1,5 +1,7 @@
 import { serialize } from 'object-to-formdata';
 import qs from 'qs';
+import consoleStyle from '../console-style';
+import { consoleColors } from './config';
 import {
   Application,
   TConfig,
@@ -8,8 +10,6 @@ import {
   TInterceptorsResponse,
   TRequestFunction,
 } from './types';
-import { consoleColors } from './config';
-import consoleStyle from '../console-style';
 
 /**
  * 根据数据类型生成方法
@@ -90,7 +90,8 @@ export const interceptorsRequest: TInterceptorsRequest = (config) => config;
 /**
  * 响应拦截
  */
-export const interceptorsResponse: TInterceptorsResponse = (res, _config) => res;
+export const interceptorsResponse: TInterceptorsResponse = (res, _config) =>
+  res;
 
 /**
  * 请求方法
@@ -108,22 +109,24 @@ export const requestFunction: TRequestFunction = (config) => {
     setTimeout(() => {
       controller.abort(); // 终止请求
       reject('request timeout');
-    }, config.timeout)
+    }, config.timeout),
   );
 
-  return Promise.race([fetch(config.url!, config), timeout]).then(async (response) => {
-    if (response instanceof Response) {
-      const { responseType } = config;
+  return Promise.race([fetch(config.url!, config), timeout]).then(
+    async (response) => {
+      if (response instanceof Response) {
+        const { responseType } = config;
 
-      if (responseType !== 'json' && responseType && response[responseType]) {
-        // 返回特定解析类型
-        return { [responseType]: await response[responseType](), response };
+        if (responseType !== 'json' && responseType && response[responseType]) {
+          // 返回特定解析类型
+          return { [responseType]: await response[responseType](), response };
+        }
+
+        return response.json();
       }
-
-      return response.json();
-    }
-    return response;
-  });
+      return response;
+    },
+  );
 };
 
 const { request, success, fail } = consoleStyle(consoleColors);

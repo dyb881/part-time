@@ -12,7 +12,13 @@ export enum Application {
 export type TConfig = {
   mode?: 'same-origin' | 'no-cors' | 'cors' | 'navigate'; // 请求的模式
   method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'; // 请求类型，部分后端只能识别大写
-  cache?: 'default' | 'no-store' | 'reload' | 'no-cache' | 'force-cache' | 'only-if-cached'; // 缓存模式
+  cache?:
+    | 'default'
+    | 'no-store'
+    | 'reload'
+    | 'no-cache'
+    | 'force-cache'
+    | 'only-if-cached'; // 缓存模式
   credentials?: 'omit' | 'same-origin' | 'include'; // 是否应该在来源请求中发送来自其他域的cookie
   responseType?: 'arrayBuffer' | 'blob' | 'formData' | 'json' | 'text'; // 响应数据类型
   // 请求头

@@ -1,16 +1,22 @@
+import { pickBy } from 'lodash';
 import {
+  defaultConfig,
+  errorTexts,
+  messageKeys,
+  statusCodeKeys,
+  successCodes,
+} from './config';
+import {
+  errorMatchText,
   interceptorsRequest,
   interceptorsResponse,
   isCompleteUrl,
-  statisticalTime,
-  requestFunction,
   labelToConfig,
-  errorMatchText,
   log,
+  requestFunction,
+  statisticalTime,
 } from './tool';
-import { defaultConfig, errorTexts, statusCodeKeys, messageKeys, successCodes } from './config';
 import { TConfig, TRequestConfig, TRequestReturn } from './types';
-import pickBy from 'lodash/pickBy';
 
 /**
  * 请求器
@@ -42,7 +48,8 @@ export default class Request {
    * 在当前请求器配置基础上合并配置，并生成新的请求
    * 主要用于一个项目面向多个服务的场景
    */
-  clone = (config: TRequestConfig) => new Request({ ...this.config, ...config });
+  clone = (config: TRequestConfig) =>
+    new Request({ ...this.config, ...config });
 
   /**
    * 初始化
@@ -53,7 +60,7 @@ export default class Request {
     Object.assign(this.errorTexts, errorTexts);
     Object.assign(
       this,
-      pickBy(configs, (i) => i !== undefined)
+      pickBy(configs, (i) => i !== undefined),
     );
     this.config = config;
   };
@@ -68,7 +75,11 @@ export default class Request {
     if (!isCompleteUrl(url)) url = this.baseURL + url;
 
     // 请求拦截
-    config = this.interceptorsRequest({ url, ...this.defaultConfig, ...config });
+    config = this.interceptorsRequest({
+      url,
+      ...this.defaultConfig,
+      ...config,
+    });
 
     // 打印请求日志
     if (this.console) log.request(config);
@@ -86,12 +97,18 @@ export default class Request {
         // 无错误信息，并且响应类型是 json
         if (!res.errorText && config.responseType === 'json') {
           // 获取匹配的状态码
-          const code = this.statusCodeKeys.reduce((code, key) => res[key] ?? code, '');
+          const code = this.statusCodeKeys.reduce(
+            (code, key) => res[key] ?? code,
+            '',
+          );
           // 当成功状态码匹配失败，既是请求失败
           if (!this.successCodes.includes(code)) {
             res.error = code;
             // 匹配获取提示信息，并赋值给错误文本属性
-            res.errorText = this.messageKeys.reduce((msg, key) => res[key] || msg, '请求异常');
+            res.errorText = this.messageKeys.reduce(
+              (msg, key) => res[key] || msg,
+              '请求异常',
+            );
           }
         }
 
@@ -122,7 +139,11 @@ export default class Request {
    */
   private createRequest = (method: TConfig['method'], configs?: TConfig) => {
     return (url: string, data?: object, ...args: (TConfig | string)[]) => {
-      const config = Object.assign({ method, url, data }, configs, ...args.map((i) => labelToConfig(i)));
+      const config = Object.assign(
+        { method, url, data },
+        configs,
+        ...args.map((i) => labelToConfig(i)),
+      );
       const { cacheKey, clearCacheKey } = config;
       if (!cacheKey) {
         let res = this.request(config);

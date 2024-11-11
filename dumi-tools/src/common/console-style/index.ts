@@ -27,7 +27,7 @@ const createConsoleStyle = (color: string) => {
 const consoleStyle = <T extends { [key: string]: string }>(colors: T) => {
   const funs: any = {};
   const keys = Object.keys(colors) as (keyof T)[];
-  keys.forEach(key => {
+  keys.forEach((key) => {
     funs[key] = createConsoleStyle(colors[key]);
   });
   return funs as {
