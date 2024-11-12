@@ -1,14 +1,15 @@
 import { Module, DynamicModule } from '@nestjs/common';
 import _ from 'lodash';
-import yaml from 'js-yaml';
 import path from 'path';
 import fs from 'fs';
 
 // 配置
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import yaml from 'js-yaml';
 
 // 日志
-import { WinstonModule } from 'nest-winston';
+import { WinstonModule, WinstonLogger } from 'nest-winston';
+import DailyRotateFile from 'winston-daily-rotate-file';
 import winston from 'winston';
 
 /**
@@ -76,14 +77,40 @@ export class GlobalModule {
         inject: [ConfigService],
         useFactory: (configService: ConfigService) => {
           const logsPath = configService.get(`logsPath`); // 获取配置文件路径
-          console.log(logsPath);
-          
-					return {
+
+          const format = winston.format.combine(
+            winston.format.ms(),
+            winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+            winston.format.align(),
+            winston.format.printf((i) => {
+              return `${[i.timestamp]} [${i.level}] ${i.ms} [${i.context}] ${i.message}`;
+            }),
+          );
+
+          return {
+            transports: [
+              new DailyRotateFile({
+                format,
+                filename: `${logsPath}/%DATE%.log`, // 日志文件名
+                datePattern: 'YYYY-MM-DD', // 按天生成日志文件
+                zippedArchive: true, // 压缩日志文件
+                maxSize: '20m', // 日志文件最大20MB
+                maxFiles: '14d', // 保留最近 14 天的日志
+              }),
+              new winston.transports.Console({
+                format: winston.format.combine(
+                  winston.format.colorize({ all: true }),
+                  format,
+                ),
+              }), // 控制台输出
+            ],
             exitOnError: false, // 防止意外退出
           };
         },
       }),
     );
+
+    providers.push(WinstonLogger);
 
     // --------------------------------- 日志模块  end  --------------------------------- //
 
