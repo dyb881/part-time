@@ -4,10 +4,8 @@ hero:
   title: PartTime
   description: 纯粹为了兼职开发项目而构建，尽可能用最少的代码与步骤独立开发整个项目
   actions:
-    - text: Hello
-      link: /
-    - text: World
-      link: /
+    - text: 快速入门
+      link: /commons
 features:
   - title: Hello
     emoji: 💎
