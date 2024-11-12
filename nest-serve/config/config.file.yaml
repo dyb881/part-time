@@ -1,0 +1,27 @@
+# 上传文件存放目录
+
+uploadPath: uploads
+
+# 上传文件静态服务器
+
+uploadHost: http://localhost:3000
+
+# 文件限制配置
+
+fileLimit:
+  image:
+    name: 图片
+    maxSizeMB: 5
+    suffixs: [jpg, png, jpeg, gif, ico]
+  video:
+    name: 视频
+    maxSizeMB: 100
+    suffixs: [mp4, webm]
+  audio:
+    name: 音频
+    maxSizeMB: 20
+    suffixs: [mp3]
+  document:
+    name: 文档
+    maxSizeMB: 50
+    suffixs: [doc, docx, ppt, pptx, xls, xlsx, pdf, md, txt]

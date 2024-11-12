@@ -1,0 +1,14 @@
+# 阿里云相关服务配置
+
+ali:
+  accessKeyId:
+  accessKeySecret:
+
+# OSS配置
+
+oss:
+  bucket:
+  region:
+  internal: false
+  secure: true
+  arn:
