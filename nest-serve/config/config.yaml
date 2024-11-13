@@ -26,7 +26,7 @@ cache:
 # Swagger 配置
 
 swagger:
-  title: 接口文档
+  title: PartTime接口文档
   description: code:状态码，message:提示信息，data:返回值
   path: swagger
 

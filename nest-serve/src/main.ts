@@ -43,9 +43,8 @@ async function bootstrap() {
   });
 
   // 输出链接
-  const swaggerUrl = `http://localhost:${serve.port}/${swagger.path}`; // 接口文档
-  loggerService.log(swaggerUrl, swagger.title);
-  loggerService.log(`http://localhost:${serve.port}/api`, '接口地址');
+  loggerService.log(`http://localhost:${serve.port}/${swagger.path}`, '接口文档');
+  loggerService.log(`http://localhost:${serve.port}/${serve.prefix}`, '接口地址');
 }
 
 bootstrap();
