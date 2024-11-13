@@ -17,6 +17,10 @@ import winston from 'winston';
 import { AllExceptionFilter } from './all.exception.filter'; // 异常过滤器
 import { TransformInterceptor } from './transform.interceptor'; // 响应参数转化为统一格式
 
+// 缓存
+import { CacheModule } from '@nestjs/cache-manager';
+import redisStore from 'cache-manager-redis-store';
+
 /**
  * 全局模块
  */
@@ -64,8 +68,8 @@ export class GlobalModule {
 
     imports.push(
       ConfigModule.forRoot({
-        isGlobal: true,
         cache: true,
+        isGlobal: true,
         load: [configuration],
       }),
     );
@@ -149,6 +153,22 @@ export class GlobalModule {
     );
 
     // --------------------------------- 日志模块  end  --------------------------------- //
+
+    // --------------------------------- 缓存模块 start --------------------------------- //
+
+    imports.push(
+      CacheModule.registerAsync({
+        isGlobal: true,
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) => {
+          const redis = configService.get('cache.redis');
+          // 使用 redis 做缓存服务
+          return redis?.host ? { store: redisStore, ...redis } : {};
+        },
+      }),
+    );
+
+    // --------------------------------- 缓存模块  end  --------------------------------- //
 
     return {
       module: GlobalModule,
