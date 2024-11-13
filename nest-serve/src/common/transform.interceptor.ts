@@ -2,6 +2,7 @@ import { Injectable, NestInterceptor, ExecutionContext, CallHandler, Inject, Log
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { requestLogger } from './tools';
 
 export interface Response<T> {
   code: number;
@@ -17,13 +18,16 @@ export class TransformInterceptor<T> implements NestInterceptor<T, Response<T>> 
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<Response<T>> {
     const ctx = context.switchToHttp();
+    const req = ctx.getRequest();
     const res = ctx.getResponse();
     const resNext = next.handle();
 
     return resNext.pipe(
       map((data) => ({ code: res.statusCode, data })), // 响应参数转化为统一格式
       tap((res) => {
-        this.loggerService.log(res, '响应结果');
+        requestLogger(this.loggerService, req, () => {
+          this.loggerService.log(res, '响应结果');
+        });
       }),
     );
   }

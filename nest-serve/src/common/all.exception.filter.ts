@@ -8,6 +8,7 @@ import {
   LoggerService,
 } from '@nestjs/common';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { requestLogger } from './tools';
 
 /**
  * 报错过滤器
@@ -21,6 +22,7 @@ export class AllExceptionFilter implements ExceptionFilter {
 
   catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
+    const request = ctx.getRequest();
     const response = ctx.getResponse();
 
     let errorLog = exception;
@@ -28,32 +30,34 @@ export class AllExceptionFilter implements ExceptionFilter {
     let error = 'Internal Server Error';
     let msg;
 
-    if (exception instanceof HttpException) {
-      const res = exception.getResponse();
-      if (typeof res !== 'string') {
-        const { statusCode = exception.getStatus(), message, error: err = message } = res as any;
+    requestLogger(this.loggerService, request, () => {
+      if (exception instanceof HttpException) {
+        const res = exception.getResponse();
+        if (typeof res !== 'string') {
+          const { statusCode = exception.getStatus(), message, error: err = message } = res as any;
+          code = statusCode;
+          error = err;
+          msg = Array.isArray(message) ? message[0] : message;
+        }
+      } else if (exception.response) {
+        const { statusCode, message, error: err = message } = exception.response;
         code = statusCode;
         error = err;
         msg = Array.isArray(message) ? message[0] : message;
+      } else {
+        this.loggerService.error(errorLog, '服务运行错误');
       }
-    } else if (exception.response) {
-      const { statusCode, message, error: err = message } = exception.response;
-      code = statusCode;
-      error = err;
-      msg = Array.isArray(message) ? message[0] : message;
-    } else {
-      this.loggerService.error(errorLog, '服务运行错误');
-    }
 
-    // 尽可能转为中文
-    const message = (chinese.test(msg) && msg) || HttpStatusText[error] || error;
+      // 尽可能转为中文
+      const message = (chinese.test(msg) && msg) || HttpStatusText[error] || error;
 
-    const resJson = { code, error, message };
+      const resJson = { code, error, message };
 
-    // 错误日志
-    this.loggerService.error(resJson, '响应错误');
+      // 错误日志
+      this.loggerService.error(resJson, '响应错误');
 
-    response.status(code).json(resJson);
+      response.status(code).json(resJson);
+    });
   }
 }
 
