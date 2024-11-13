@@ -78,13 +78,7 @@ export class GlobalModule {
     const lc = (code: number | string, text: any) => `\x1B[${code}m${text}\x1B[0m`;
 
     // 定义日志级别颜色
-    const levelsColors = {
-      error: 31,
-      warn: 33,
-      info: 32,
-      debug: 34,
-      verbose: 36,
-    };
+    const levelsColors = { error: 31, warn: 33, info: 32, debug: 34, verbose: 36 };
 
     imports.push(
       WinstonModule.forRootAsync({
@@ -92,37 +86,33 @@ export class GlobalModule {
         useFactory: (configService: ConfigService) => {
           const logsPath = configService.get(`logsPath`); // 获取配置文件路径
 
-          const format = winston.format.combine(
-            winston.format.ms(),
-            winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
-          );
-
           return {
+            format: winston.format.combine(
+              winston.format.ms(),
+              winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
+            ),
             transports: [
               new DailyRotateFile({
-                format: winston.format.combine(
-                  format,
-                  winston.format.printf((i) => {
-                    const { code, error, message, data } = i;
-                    let log = [
-                      i.timestamp, // 添加时间
-                      `[${i.level}]`, // 添加等级
-                      i.ms, // 添加毫秒
-                      `[${i.context || i.stack[0]}]`, // 内容类型
-                    ].join(' ');
+                format: winston.format.printf((i) => {
+                  const { code, error, message, data } = i;
+                  let log = [
+                    i.timestamp, // 添加时间
+                    `[${i.level}]`, // 添加等级
+                    i.ms, // 添加毫秒
+                    `[${i.context || i.stack[0]}]`, // 内容类型
+                  ].join(' ');
 
-                    // 处理打印
-                    if (error instanceof Error) {
-                      log += '\n' + error.stack;
-                    } else if (code && error && message) {
-                      log += '\n' + JSON.stringify({ code, error, message }, null, 2);
-                    } else if (code && data) {
-                      log += '\n' + JSON.stringify({ code, data }, null, 2);
-                    } else log += '\t' + i.message;
+                  // 处理打印
+                  if (error instanceof Error) {
+                    log += '\n' + error.stack;
+                  } else if (code && error && message) {
+                    log += '\n' + JSON.stringify({ code, error, message }, null, 2);
+                  } else if (code && data) {
+                    log += '\n' + JSON.stringify({ code, data }, null, 2);
+                  } else log += '\t' + i.message;
 
-                    return log;
-                  }),
-                ),
+                  return log;
+                }),
                 filename: `${logsPath}/%DATE%.log`, // 日志文件名
                 datePattern: 'YYYY-MM-DD', // 按天生成日志文件
                 zippedArchive: true, // 压缩日志文件
@@ -130,29 +120,26 @@ export class GlobalModule {
                 maxFiles: '14d', // 保留最近 14 天的日志
               }),
               new winston.transports.Console({
-                format: winston.format.combine(
-                  format,
-                  winston.format.printf((i) => {
-                    const { code, error, message, data } = i;
-                    let log = [
-                      lc(30, i.timestamp), // 添加时间
-                      lc(levelsColors[i.level], `[${i.level}]`), // 添加等级
-                      lc(37, i.ms), // 添加毫秒
-                      lc(35, `[${i.context || i.stack[0]}]`), // 内容类型
-                    ].join(' ');
+                format: winston.format.printf((i) => {
+                  const { code, error, message, data } = i;
+                  let log = [
+                    lc(30, i.timestamp), // 添加时间
+                    lc(levelsColors[i.level], `[${i.level}]`), // 添加等级
+                    lc(37, i.ms), // 添加毫秒
+                    lc(33, `[${i.context || i.stack[0]}]`), // 内容类型
+                  ].join(' ');
 
-                    // 处理打印
-                    if (error instanceof Error) {
-                      log += '\n' + error.stack;
-                    } else if (code && error && message) {
-                      log += '\n' + JSON.stringify({ code, error, message }, null, 2);
-                    } else if (code && data) {
-                      log += '\n' + JSON.stringify({ code, data }, null, 2);
-                    } else log += '\t' + lc(32, i.message);
+                  // 处理打印
+                  if (error instanceof Error) {
+                    log += '\n' + lc(31, error.stack);
+                  } else if (code && error && message) {
+                    log += '\n' + lc(31, JSON.stringify({ code, error, message }, null, 2));
+                  } else if (code && data) {
+                    log += '\n' + lc(32, JSON.stringify({ code, data }, null, 2));
+                  } else log += '\t' + lc(32, i.message);
 
-                    return log;
-                  }),
-                ),
+                  return log;
+                }),
               }), // 控制台输出
             ],
             exitOnError: false, // 防止意外退出
