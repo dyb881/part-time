@@ -3,6 +3,7 @@ import { Module, DynamicModule, ValidationPipe } from '@nestjs/common';
 import _ from 'lodash';
 import path from 'path';
 import fs from 'fs';
+import { rootPath } from './tools';
 
 // 配置
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -21,6 +22,9 @@ import { TransformInterceptor } from './transform.interceptor'; // 响应参数�
 import { CacheModule } from '@nestjs/cache-manager';
 import redisStore from 'cache-manager-redis-store';
 
+// 文件上传
+import { UploadModule } from './upload/upload.module';
+
 /**
  * 全局模块
  */
@@ -31,8 +35,6 @@ export class GlobalModule {
    */
   static forRoot(): DynamicModule {
     const imports: DynamicModule['imports'] = [];
-
-    const rootPath = path.join(__dirname, '../../'); // 跟目录
 
     // --------------------------------- 配置模块 start --------------------------------- //
 
@@ -169,6 +171,8 @@ export class GlobalModule {
     );
 
     // --------------------------------- 缓存模块  end  --------------------------------- //
+
+    imports.push(UploadModule); // 文件上传
 
     return {
       module: GlobalModule,
