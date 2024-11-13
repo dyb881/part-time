@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { LoggerService } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { mw } from 'request-ip';
 
@@ -20,10 +21,19 @@ async function bootstrap() {
   const loggerService = app.get<LoggerService>(WINSTON_MODULE_NEST_PROVIDER);
   app.useLogger(loggerService);
 
-  const swagger = configService.get('swagger');
+  const serve = configService.get('serve'); // 服务配置
+  const swagger = configService.get('swagger'); // swagger 配置
 
-  // 服务配置
-  const serve = configService.get('serve');
+  // 接口文档
+  const documentBuilder = new DocumentBuilder()
+    .setTitle(swagger.title)
+    .setDescription(swagger.description)
+    .addBearerAuth()
+    .addServer(serve.prefix)
+    .build();
+  const document = SwaggerModule.createDocument(app, documentBuilder, { ignoreGlobalPrefix: true });
+  SwaggerModule.setup(swagger.path, app, document);
+
   app.setGlobalPrefix(serve.prefix); // 接口请求前缀
   await app.listen(process.env.PORT ?? serve.port); // 启动服务
 
@@ -35,6 +45,7 @@ async function bootstrap() {
   // 输出链接
   const swaggerUrl = `http://localhost:${serve.port}/${swagger.path}`; // 接口文档
   loggerService.log(swaggerUrl, swagger.title);
+  loggerService.log(`http://localhost:${serve.port}/api`, '接口地址');
 }
 
 bootstrap();
