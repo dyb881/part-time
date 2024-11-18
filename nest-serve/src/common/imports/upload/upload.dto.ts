@@ -31,3 +31,33 @@ export class UploadResDto {
   @ApiProperty({ description: '访问地址' })
   url: string;
 }
+
+/**
+ * OSS 临时授权配置
+ */
+export class OSSSTSOptionsDto {
+  accessKeyId: string;
+  accessKeySecret: string;
+  stsToken: string;
+  region: string;
+  bucket: string;
+}
+
+/**
+ * OSS 验证属性
+ */
+export class OSSValidateDto {
+  @ApiProperty({ description: '文件名' })
+  name: string;
+
+  @ApiProperty({ description: '文件大小' })
+  size: number;
+}
+
+/**
+ * OSS 上传对象属性
+ */
+export class OSSPutObjectDto extends UploadResDto {
+  @ApiProperty({ description: 'OSS对象名称' })
+  name: string;
+}

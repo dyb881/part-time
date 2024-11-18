@@ -4,12 +4,28 @@ import { FileLimit } from './upload.dto';
 import { promises as fs } from 'fs';
 import { findKey } from 'lodash';
 import { extname } from 'path';
+import dayjs from 'dayjs';
 
-export type verifyOptions = {
+import { nuid } from 'nuid';
+import OSS from 'ali-oss';
+
+type verifyOptions = {
   originalname?: string; // 文件原名
   name?: string; // 文件名
   size: number; // 文件大小
   path?: string; // 文件路径
+};
+
+type aliConfig = {
+  accessKeyId?: string;
+  accessKeySecret?: string;
+  oss: {
+    bucket: string;
+    region: string;
+    internal: boolean;
+    secure: boolean;
+    arn: string;
+  };
 };
 
 /**
@@ -17,14 +33,15 @@ export type verifyOptions = {
  */
 @Injectable()
 export class UploadService {
-  fileLimit: FileLimit; // 文件限制配置
   uploadPath: string; // 文件储存路径
+  fileLimit: FileLimit; // 文件限制配置
+  ali: aliConfig; // 阿里云相关配置
 
   constructor(private readonly configService: ConfigService) {
-    this.fileLimit = this.configService.get<FileLimit>('fileLimit');
     this.uploadPath = configService.get<string>('uploadPath');
-    this.ali = configService.get('ali');
-    this.oss = configService.get('oss');
+    this.fileLimit = this.configService.get<FileLimit>('fileLimit');
+    this.ali = configService.get<aliConfig>('ali');
+    this.initOss();
   }
 
   /**
@@ -56,4 +73,54 @@ export class UploadService {
       await fs.unlink(path);
     } catch {}
   }
+
+  // ------------------------------------------- 阿里云 oss 上传 start ------------------------------------------- //
+
+  oss: OSS;
+  sts: OSS.STS;
+  policy: object;
+  expirationSeconds = 15 * 60; // sts 到期时间/秒
+
+  initOss = () => {
+    const { accessKeyId, accessKeySecret, oss } = this.ali;
+    const { bucket, region, internal, secure } = oss;
+    this.oss = new OSS({ accessKeyId, accessKeySecret, bucket, region, internal, secure });
+    this.sts = new OSS.STS({ accessKeyId, accessKeySecret });
+    this.policy = {
+      Statement: [{ Effect: 'Allow', Action: ['oss:PutObject'], Resource: [`acs:oss:*:*:${bucket}/*`] }],
+      Version: '1',
+    };
+  };
+
+  /**
+   * 获取临时上传密钥
+   */
+  async getSTS() {
+    const token = await this.sts.assumeRole(this.ali.oss.arn, this.policy, this.expirationSeconds);
+    const { region, bucket } = this.ali.oss;
+
+    return {
+      accessKeyId: token.credentials.AccessKeyId,
+      accessKeySecret: token.credentials.AccessKeySecret,
+      stsToken: token.credentials.SecurityToken,
+      region,
+      bucket,
+    };
+  }
+
+  /**
+   * 获取 OSS 上传对象属性
+   */
+  getPutObject(fileName: string) {
+    const { bucket, region } = this.ali.oss;
+    const day = dayjs().format('YYYY-MM-DD');
+    const name = `${this.uploadPath}/${day}/${nuid.next() + extname(fileName)}`;
+
+    return {
+      name, // OSS 对象名称
+      url: `https://${bucket}.${region}.aliyuncs.com/${name}`, // OSS 访问地址
+    };
+  }
+
+  // ------------------------------------------- 阿里云 oss 上传  end  ------------------------------------------- //
 }
