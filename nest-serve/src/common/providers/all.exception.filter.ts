@@ -8,7 +8,7 @@ import {
   LoggerService,
 } from '@nestjs/common';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
-import { requestLogger } from './tools';
+import { requestLogger } from '../tools';
 
 /**
  * 报错过滤器

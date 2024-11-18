@@ -1,11 +1,17 @@
-import { ApiProperty } from '../tools';
+import { ApiProperty } from '@nestjs/swagger';
 
+/**
+ * 文件限制配置
+ */
 export class FileLimitItem {
   name: string; // 文件类型名称
   maxSizeMB: number; // 最大尺寸 M
   suffixs: string[]; // 后缀名
 }
 
+/**
+ * 文件限制列表
+ */
 export class FileLimit {
   [key: string]: FileLimitItem;
 }
@@ -14,7 +20,7 @@ export class FileLimit {
  * 文件上传数据
  */
 export class UploadDto {
-  @ApiProperty('上传文件', { type: 'string', format: 'binary' })
+  @ApiProperty({ description: '上传文件', type: 'string', format: 'binary' })
   file: any;
 }
 
@@ -22,6 +28,6 @@ export class UploadDto {
  * 上传后响应数据
  */
 export class UploadResDto {
-  @ApiProperty('访问地址')
+  @ApiProperty({ description: '访问地址' })
   url: string;
 }

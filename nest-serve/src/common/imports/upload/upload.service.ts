@@ -6,7 +6,7 @@ import { findKey } from 'lodash';
 import { extname } from 'path';
 
 export type verifyOptions = {
-  originalname?: string;
+  originalname?: string; // 文件原名
   name?: string; // 文件名
   size: number; // 文件大小
   path?: string; // 文件路径
@@ -18,9 +18,13 @@ export type verifyOptions = {
 @Injectable()
 export class UploadService {
   fileLimit: FileLimit; // 文件限制配置
+  uploadPath: string; // 文件储存路径
 
   constructor(private readonly configService: ConfigService) {
     this.fileLimit = this.configService.get<FileLimit>('fileLimit');
+    this.uploadPath = configService.get<string>('uploadPath');
+    this.ali = configService.get('ali');
+    this.oss = configService.get('oss');
   }
 
   /**

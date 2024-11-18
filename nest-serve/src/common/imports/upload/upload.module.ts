@@ -11,7 +11,7 @@ import dayjs from 'dayjs';
 
 import { UploadController } from './upload.controller';
 import { UploadService } from './upload.service';
-import { rootPath } from '../tools';
+import { rootPath } from '../../tools';
 
 /**
  * 文件上传模块

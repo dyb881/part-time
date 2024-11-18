@@ -2,7 +2,7 @@ import { Injectable, NestInterceptor, ExecutionContext, CallHandler, Inject, Log
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
-import { requestLogger } from './tools';
+import { requestLogger } from '../tools';
 
 export interface Response<T> {
   code: number;
