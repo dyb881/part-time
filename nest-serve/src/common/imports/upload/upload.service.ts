@@ -84,6 +84,7 @@ export class UploadService {
   initOss = () => {
     const { accessKeyId, accessKeySecret, oss } = this.ali;
     const { bucket, region, internal, secure } = oss;
+    if (!accessKeyId || !accessKeySecret) return;
     this.oss = new OSS({ accessKeyId, accessKeySecret, bucket, region, internal, secure });
     this.sts = new OSS.STS({ accessKeyId, accessKeySecret });
     this.policy = {

@@ -16,7 +16,7 @@ export type DtoParamOptions = ApiPropertyOptions & {
 export function DtoParam(name: string, _options?: DtoParamOptions) {
   const decorators: Array<ClassDecorator | MethodDecorator | PropertyDecorator> = [];
 
-  let { isInt, isDate, matches, required = true, enum: _enum, ...options } = _options;
+  let { isInt, isDate, matches, required = true, enum: _enum, ...options } = _options || {};
 
   Object.assign(options, { required });
   if (required) {
