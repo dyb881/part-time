@@ -54,4 +54,4 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
   ],
 })
-export class GlobalModule {}
+export class CommonModule {}

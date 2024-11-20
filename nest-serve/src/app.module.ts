@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { GlobalModule } from './common';
+import { CommonModule } from './common';
 
 @Module({
-  imports: [GlobalModule],
+  imports: [CommonModule],
 })
 export class AppModule {}

@@ -1,2 +1,2 @@
-export * from './global.module';
+export * from './common.module';
 export * from './tools';

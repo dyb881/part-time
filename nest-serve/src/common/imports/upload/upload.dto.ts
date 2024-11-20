@@ -21,7 +21,7 @@ export class FileLimit {
  */
 export class UploadDto {
   @ApiProperty({ description: '上传文件', type: 'string', format: 'binary' })
-  file: any;
+  file: Express.Multer.File;;
 }
 
 /**
@@ -36,10 +36,19 @@ export class UploadResDto {
  * OSS 临时授权配置
  */
 export class OSSSTSOptionsDto {
+  @ApiProperty({ description: '阿里云 accessKeyId' })
   accessKeyId: string;
+
+  @ApiProperty({ description: '阿里云 accessKeySecret' })
   accessKeySecret: string;
+
+  @ApiProperty({ description: 'STS 临时授权 token' })
   stsToken: string;
+
+  @ApiProperty({ description: 'OSS 区域' })
   region: string;
+
+  @ApiProperty({ description: 'OSS 桶' })
   bucket: string;
 }
 
