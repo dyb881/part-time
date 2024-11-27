@@ -6,7 +6,7 @@ import { pickBy, mapValues } from 'lodash';
 /**
  * 插入模糊查询
  */
-export const insLike = (data: object, keys: string[]) => {
+export const insLike = (data: any, keys: string[]) => {
   keys.forEach((i) => {
     if (data[i]) data[i] = Like(`%${data[i]}%`);
   });
@@ -15,7 +15,7 @@ export const insLike = (data: object, keys: string[]) => {
 /**
  * 当未提交对应字段时，插入空值
  */
-export const insNull = (data: object, keys: string[]) => {
+export const insNull = (data: any, keys: string[]) => {
   keys.forEach((i) => {
     if (data[i] === undefined) data[i] = null;
   });
