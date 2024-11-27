@@ -45,9 +45,7 @@ const levelsColors = { error: 31, warn: 33, info: 32, debug: 34, verbose: 36 };
                   log += '\n' + error.stack;
                 } else if (code && error && message) {
                   log += '\n' + JSON.stringify({ code, error, message }, null, 2);
-                } else if (code && data) {
-                  log += '\n' + JSON.stringify({ code, data }, null, 2);
-                } else log += '\t' + i.message;
+                } else log += '\t' + message;
 
                 return log;
               }),
@@ -72,9 +70,7 @@ const levelsColors = { error: 31, warn: 33, info: 32, debug: 34, verbose: 36 };
                   log += '\n' + lc(31, error.stack);
                 } else if (code && error && message) {
                   log += '\n' + lc(31, JSON.stringify({ code, error, message }, null, 2));
-                } else if (code && data) {
-                  log += '\n' + lc(32, JSON.stringify({ code, data }, null, 2));
-                } else log += '\t' + lc(32, i.message);
+                } else log += '\t' + lc(32, message);
 
                 return log;
               }),

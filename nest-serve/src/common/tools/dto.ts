@@ -1,7 +1,7 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
-import { IsIn, Matches, IsInt, IsNotEmpty, IsDate, ValidationOptions, IsOptional } from 'class-validator';
+import { IsIn, Matches, IsInt, IsNotEmpty, IsDate, IsOptional } from 'class-validator';
 import { getKeys, getEnumRemark } from './data';
 
 export type DtoParamOptions = ApiPropertyOptions & {

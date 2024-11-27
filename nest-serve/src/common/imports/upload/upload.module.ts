@@ -47,7 +47,14 @@ import { rootPath } from '../../tools';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         const uploadPath = configService.get('uploadPath');
-        return [{ rootPath: join(rootPath, uploadPath), exclude: ['/api/:path*'] }];
+        return [
+          {
+            rootPath: join(rootPath, uploadPath),
+            serveRoot: `/${uploadPath}`,
+            renderPath: `/${uploadPath}/:path*`,
+            exclude: ['/api/:path*', '/swagger/:path*'],
+          },
+        ];
       },
     }),
   ],

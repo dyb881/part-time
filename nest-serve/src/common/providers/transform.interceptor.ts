@@ -26,7 +26,7 @@ export class TransformInterceptor<T> implements NestInterceptor<T, Response<T>> 
       map((data) => ({ code: res.statusCode, data })), // 响应参数转化为统一格式
       tap((res) => {
         requestLogger(this.loggerService, req, () => {
-          this.loggerService.log(res, '响应结果');
+          this.loggerService.log('\n' + JSON.stringify(res, null, 2), '响应结果');
         });
       }),
     );

@@ -9,12 +9,14 @@ import { UploadService } from './upload.service';
 @Controller()
 export class UploadController {
   uploadHost: string;
+  uploadPath: string;
 
   constructor(
     private readonly configService: ConfigService,
     private readonly uploadService: UploadService,
   ) {
     this.uploadHost = this.configService.get('uploadHost');
+    this.uploadPath = this.configService.get('uploadPath');
   }
 
   @ApiOperation({ summary: '上传到服务器' })
@@ -25,7 +27,8 @@ export class UploadController {
   @UseInterceptors(FileInterceptor('file'))
   async uploadServer(@UploadedFile() file) {
     this.uploadService.verify(file);
-    const url = this.uploadHost + file.path.split('uploads')[1];
+    const [_, path] = file.path.split('uploads');
+    const url = `${this.uploadHost}/${this.uploadPath}/${path}`;
     return { url };
   }
 

@@ -31,23 +31,23 @@ export class BasicInfoUpdateDto extends BasicInfoCreateDto {}
 
 // ------------------------ 信息分类 ------------------------ //
 
-export class CategoryInfoQueryDto extends BasicInfoQueryDto {
+export class CategoryQueryDto extends BasicInfoQueryDto {
   @DtoParam('上级ID', { required: false })
   parentId?: string;
 }
 
-export class CategoryInfoCreateDto extends BasicInfoCreateDto {
+export class CategoryCreateDto extends BasicInfoCreateDto {
   @DtoParam('上级ID', { required: false })
   parentId?: string;
 }
 
-export class CategoryInfoUpdateDto extends CategoryInfoCreateDto {}
+export class CategoryUpdateDto extends CategoryCreateDto {}
 
 // ------------------------ 信息分类 ------------------------ //
 
 // ------------------------ 文章信息 ------------------------ //
 
-export class ArticleInfoQueryDto extends BasicInfoQueryDto {
+export class ArticleQueryDto extends BasicInfoQueryDto {
   @DtoParam('简介', { required: false })
   summary?: string;
 
@@ -55,7 +55,7 @@ export class ArticleInfoQueryDto extends BasicInfoQueryDto {
   content?: string;
 }
 
-export class ArticleInfoCreateDto extends BasicInfoCreateDto {
+export class ArticleCreateDto extends BasicInfoCreateDto {
   @DtoParam('图组', { required: false })
   pictureGroup?: string[];
 
@@ -69,6 +69,6 @@ export class ArticleInfoCreateDto extends BasicInfoCreateDto {
   hot: number;
 }
 
-export class ArticleInfoUpdateDto extends ArticleInfoCreateDto {}
+export class ArticleUpdateDto extends ArticleCreateDto {}
 
 // ------------------------ 文章信息 ------------------------ //

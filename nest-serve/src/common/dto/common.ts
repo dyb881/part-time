@@ -1,18 +1,21 @@
 import { DtoParam } from '../tools';
 
 /**
- * 查询分页对象
+ * 生成查询分页
  */
-export class PaginationQueryDto {
-  @DtoParam('当前页码', { isInt: true, default: 1 })
-  current: number;
+export function PaginationQueryDto<Dto extends new (...args: any[]) => any>(_Dto: Dto) {
+  class PaginationQueryDto extends _Dto {
+    @DtoParam('当前页码', { isInt: true, default: 1 })
+    current: number;
 
-  @DtoParam('每页数量', { isInt: true, default: 10 })
-  pageSize: number;
+    @DtoParam('每页数量', { isInt: true, default: 20 })
+    pageSize: number;
+  }
+  return class extends PaginationQueryDto {};
 }
 
 /**
- * 分页对象
+ * 分页数据
  */
 export function PaginationDto<Dto extends Function>(_Dto: Dto) {
   class PaginationDto {

@@ -1,11 +1,10 @@
 import { DtoParam } from '../tools';
-import { PaginationQueryDto } from './common';
 
 /**
  * 查询分页对象
  * 账号常用
  */
-export class AccountPaginationQueryDto extends PaginationQueryDto {
+export class AccountQueryDto {
   @DtoParam('用户名', { required: false })
   username?: string;
 

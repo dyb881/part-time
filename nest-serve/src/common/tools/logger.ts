@@ -12,7 +12,7 @@ export const requestLogger = (logget: LoggerService, request: any, content: Func
   logget.log(`\nstart ${line} ${num} ${line} start`, '请求开始');
   const { url, clientIp, method, body } = request;
   logget.log(`${toIp(clientIp)} ${method} ${url}`, '请求路径');
-  Object.keys(body).length && logget.log(body, '请求参数');
+  Object.keys(body).length && logget.log('\n' + JSON.stringify(body, null, 2), '请求参数');
   content();
   logget.log(`\n-end- ${line} ${num} ${line} -end-`, '请求结束');
 };
