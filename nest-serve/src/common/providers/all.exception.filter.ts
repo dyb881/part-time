@@ -39,11 +39,6 @@ export class AllExceptionFilter implements ExceptionFilter {
           error = err;
           msg = Array.isArray(message) ? message[0] : message;
         }
-      } else if (exception.response) {
-        const { statusCode, message, error: err = message } = exception.response;
-        code = statusCode;
-        error = err;
-        msg = Array.isArray(message) ? message[0] : message;
       } else {
         this.loggerService.error(errorLog, '服务运行错误');
       }

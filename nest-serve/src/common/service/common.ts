@@ -5,14 +5,31 @@ import { TransformInstanceToPlain } from 'class-transformer';
 import { toWhere } from '../tools';
 import { IdsDto } from '../dto';
 
+/**
+ * curd 公共服务类型
+ */
+export interface ICommonService {
+  // new (...args: any[]): ICommonService;
+  // readonly repository: any;
+  getList: any;
+  getListAndCount: any;
+  get: any;
+  create: any;
+  update: any;
+  delete: any;
+}
+
+/**
+ * crud 公共服务
+ */
 export function CommonService<
   Entity = any, // 实体
-  CreateDto = any,
-  UpdateDto = any,
-  QueryDto = any,
-  PaginationQueryDto = any,
+  CreateDto = any, // 创建
+  UpdateDto = any, // 更新
+  QueryDto = any, // 查询条件
+  PaginationQueryDto = any, // 分页查询条件
 >(_Entity: Function) {
-  class CommonService {
+  class CommonService implements ICommonService {
     constructor(@InjectRepository(_Entity) readonly repository: Repository<Entity>) {}
 
     /**

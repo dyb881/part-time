@@ -6,6 +6,9 @@ import { IdsDto, AccountLoginDto } from '../dto';
 import { insLike, insNull } from '../tools';
 import { CommonService } from './common';
 
+/**
+ * crud 帐号服务
+ */
 export function AccountService<
   Entity = any,
   CreateDto = any,

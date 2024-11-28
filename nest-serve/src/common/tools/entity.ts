@@ -26,6 +26,7 @@ export function EntityColumn(name: string, length?: number | EntityColumnOptions
     apiPropertyOptions.enum = getKeys(_enum);
   }
 
+  // 数组类型
   if (options.type === 'simple-array') {
     if (!apiPropertyOptions.type) apiPropertyOptions.type = [String];
   }
