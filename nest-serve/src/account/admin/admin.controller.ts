@@ -9,7 +9,7 @@ import {
   AccountAdminPaginationDto,
 } from './admin.dto';
 
-@ApiPath('admin', '帐号管理', '管理员帐号')
+@ApiPath('admin', '管理员帐号')
 export class AccountAdminController extends AccountController<
   AccountAdminCreateDto,
   AccountAdminUpdateDto,

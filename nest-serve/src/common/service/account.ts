@@ -17,13 +17,13 @@ export interface IAccountService extends ICommonService {
  * crud 帐号服务
  */
 export function AccountService<
-  Entity = any,
   CreateDto = any,
   UpdateDto = any,
   QueryDto = any,
   PaginationQueryDto = any,
->(_Entity: Function) {
-  class AccountService extends CommonService<Entity, CreateDto, UpdateDto, QueryDto, PaginationQueryDto>(_Entity) {
+  Entity = any,
+>(_Entity: Entity) {
+  class AccountService extends CommonService<CreateDto, UpdateDto, QueryDto, PaginationQueryDto>(_Entity) {
     /**
      * 给账号固定参数加上模糊查询
      */

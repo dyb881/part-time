@@ -10,7 +10,6 @@ import {
 
 @Injectable()
 export class AccountAdminService extends AccountService<
-  AccountAdmin,
   AccountAdminCreateDto,
   AccountAdminUpdateDto,
   AccountAdminQueryDto,

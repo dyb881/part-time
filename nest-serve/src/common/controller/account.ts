@@ -21,7 +21,7 @@ export function AccountController<
     _Entity,
     _PaginationDto,
   ) {
-    @Method('登录', ['Post', 'login'])
+    @Method('登录', ['Post', 'login'], _Entity)
     login(@Body() data: AccountLoginDto) {
       return this.service.login(data);
     }

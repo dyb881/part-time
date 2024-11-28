@@ -21,14 +21,14 @@ export interface ICommonService {
  * crud 公共服务
  */
 export function CommonService<
-  Entity = any, // 实体
   CreateDto = any, // 创建
   UpdateDto = any, // 更新
   QueryDto = any, // 查询条件
   PaginationQueryDto = any, // 分页查询条件
->(_Entity: Function) {
+  Entity = any, // 实体
+>(_Entity: Entity) {
   class CommonService implements ICommonService {
-    constructor(@InjectRepository(_Entity) readonly repository: Repository<Entity>) {}
+    constructor(@InjectRepository(_Entity as Function) readonly repository: Repository<Entity>) {}
 
     /**
      * 查询所有数据
