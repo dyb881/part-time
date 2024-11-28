@@ -4,7 +4,14 @@ import { TransformInstanceToPlain } from 'class-transformer';
 import { sha512 } from 'js-sha512';
 import { IdsDto, AccountLoginDto } from '../dto';
 import { insLike, insNull } from '../tools';
-import { CommonService } from './common';
+import { CommonService, ICommonService } from './common';
+
+/**
+ * curd 帐号服务类型
+ */
+export interface IAccountService extends ICommonService {
+  login: any;
+}
 
 /**
  * crud 帐号服务

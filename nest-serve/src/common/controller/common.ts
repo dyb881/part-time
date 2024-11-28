@@ -19,17 +19,17 @@ export function CommonController<
   class CommonController {
     constructor(readonly service: Service) {}
 
-    @Method('查询所有数据', ['Get', 'all'], { type: [_Entity] })
+    @Method('查询所有数据', ['Get', 'all'], [_Entity])
     getAll(@Query() data: QueryDto) {
       return this.service.getList(data);
     }
 
-    @Method('查询分页列表', 'Get', { type: _PaginationDto })
+    @Method('查询分页列表', 'Get', _PaginationDto)
     getListAndCount(@Query() data: PaginationQueryDto) {
       return this.service.getListAndCount(data);
     }
 
-    @Method('查询详情', ['Get', ':id'], { type: _Entity })
+    @Method('查询详情', ['Get', ':id'], _Entity)
     get(@Param('id') id: string) {
       return this.service.get(id);
     }

@@ -1,5 +1,4 @@
-import { Controller } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiPath, AccountController } from '../../common';
 import { AccountAdminService } from './admin.service';
 import { AccountAdmin } from './admin.entity';
 import {
@@ -9,11 +8,9 @@ import {
   AccountAdminPaginationQueryDto,
   AccountAdminPaginationDto,
 } from './admin.dto';
-import { IdsDto, CommonController } from '../../common';
 
-@ApiTags('管理员账号')
-@Controller('admin')
-export class AccountAdminController extends CommonController<
+@ApiPath('admin', '帐号管理', '管理员帐号')
+export class AccountAdminController extends AccountController<
   AccountAdminCreateDto,
   AccountAdminUpdateDto,
   AccountAdminQueryDto,

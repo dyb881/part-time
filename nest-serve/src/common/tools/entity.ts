@@ -66,17 +66,3 @@ export const sha512Transformer = createTransformer({ to: sha512 });
  * 客户端 ip 字符串 转化纯 ip
  */
 export const toIpTransformer = createTransformer({ to: toIp });
-
-// /**
-//  * json列装饰器
-//  */
-// export const ColumnJson = (comment: string, options?: ColumnCommonOptions) => {
-//   return ColumnSource('simple-json', { comment, ...options });
-// };
-
-// /**
-//  * swagger 路由标注
-//  */
-// export const ApiOperation = (summary: string, options?: ApiOperationOptions) => {
-//   return ApiOperationSource({ summary, ...options });
-// };
