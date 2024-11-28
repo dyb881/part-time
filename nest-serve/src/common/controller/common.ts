@@ -7,21 +7,14 @@ import { IdsDto } from '../dto';
  * 增刪查改控制器
  */
 export function CommonController<
-  Entity extends Function = any, // 实体
-  CreateDto extends Function = any, // 创建
-  UpdateDto extends Function = any, // 更新
-  QueryDto extends Function = any, // 查询条件
-  PaginationQueryDto extends Function = any, // 分页查询条件
-  PaginationDto extends Function = any, // 分页列表数据
+  CreateDto = any, // 创建
+  UpdateDto = any, // 更新
+  QueryDto = any, // 查询条件
+  PaginationQueryDto = any, // 分页查询条件
   Service extends ICommonService = any, // 对应服务
 >(
-  _Entity: Entity,
-  _CreateDto: CreateDto,
-  _UpdateDto: UpdateDto,
-  _QueryDto: QueryDto,
-  _PaginationQueryDto: PaginationQueryDto,
-  _PaginationDto: PaginationDto,
-  _Service: Service,
+  _Entity: Function, // 返回实体
+  _PaginationDto: Function, // 返回分页数据
 ) {
   class CommonController {
     constructor(readonly service: Service) {}

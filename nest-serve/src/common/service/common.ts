@@ -9,7 +9,12 @@ import { IdsDto } from '../dto';
  * curd 公共服务类型
  */
 export interface ICommonService {
-  [key: string]: any
+  getList: any;
+  getListAndCount: any;
+  get: any;
+  create: any;
+  update: any;
+  delete: any;
 }
 
 /**

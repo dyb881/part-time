@@ -13,12 +13,10 @@ import { IdsDto, CommonController } from '../../common';
 
 @ApiTags('管理员账号')
 @Controller('admin')
-export class AccountAdminController extends CommonController(
-  AccountAdmin,
+export class AccountAdminController extends CommonController<
   AccountAdminCreateDto,
   AccountAdminUpdateDto,
   AccountAdminQueryDto,
   AccountAdminPaginationQueryDto,
-  AccountAdminPaginationDto,
-  AccountAdminService,
-) {}
+  AccountAdminService
+>(AccountAdmin, AccountAdminPaginationDto) {}
