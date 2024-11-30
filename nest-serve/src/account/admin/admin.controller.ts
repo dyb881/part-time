@@ -18,5 +18,4 @@ export class AccountAdminController extends CommonController(
   AccountAdminPaginationQueryDto,
   AccountAdminPaginationDto,
   AccountAdminService,
-) {
-}
+) {}

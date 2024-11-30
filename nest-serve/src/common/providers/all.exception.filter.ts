@@ -30,6 +30,8 @@ export class AllExceptionFilter implements ExceptionFilter {
     let error = 'Internal Server Error';
     let msg;
 
+    console.log(exception)
+
     requestLogger(this.loggerService, request, () => {
       if (exception instanceof HttpException) {
         const res = exception.getResponse();

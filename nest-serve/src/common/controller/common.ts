@@ -1,19 +1,22 @@
-import { Param, Query, Body, Inject } from '@nestjs/common';
+import { Param, Query, Body, Inject, BadRequestException } from '@nestjs/common';
 import { Method } from '../tools';
 import { IdsDto } from '../dto';
 import { TClass } from '../service';
+import { AccountAdminCreateDto } from '../../account/admin/admin.dto';
+import { validate } from 'class-validator';
+import { ValidationPipe } from './validation.pipe';
 
 /**
  * 增刪查改控制器
  */
 export function CommonController<
+  Entity extends object, // 实体
+  CreateDto extends object, // 创建
+  UpdateDto extends object, // 更新
+  QueryDto extends object, // 查询条件
+  PaginationQueryDto extends object, // 分页查询条件
+  PaginationDto extends object, // 返回分页数据
   Service extends { [key: string]: any }, // 对应服务
-  Entity, // 实体
-  CreateDto, // 创建
-  UpdateDto, // 更新
-  QueryDto, // 查询条件
-  PaginationQueryDto, // 分页查询条件
-  PaginationDto, // 返回分页数据
 >(
   _Entity: TClass<Entity>,
   _CreateDto: TClass<CreateDto>,
@@ -27,12 +30,12 @@ export function CommonController<
     constructor(@Inject(_Service) readonly service: Service) {}
 
     @Method('查询所有数据', ['Get', 'all'], { res: [_Entity], query: _QueryDto })
-    getList(@Query() data: QueryDto) {
+    getList(@Query(new ValidationPipe(_QueryDto)) data: QueryDto) {
       return this.service.getList(data);
     }
 
     @Method('查询分页列表', 'Get', { res: _PaginationDto, query: _PaginationQueryDto })
-    getListAndCount(@Query() data: PaginationQueryDto) {
+    getListAndCount(@Query(new ValidationPipe(_PaginationQueryDto)) data: PaginationQueryDto) {
       return this.service.getListAndCount(data);
     }
 
@@ -42,12 +45,12 @@ export function CommonController<
     }
 
     @Method('添加', 'Post', { body: _CreateDto })
-    async create(@Body() data: CreateDto) {
+    async create(@Body(new ValidationPipe(_CreateDto)) data: CreateDto) {
       await this.service.create(data);
     }
 
     @Method('编辑', ['Put', ':id'], { body: _UpdateDto })
-    async update(@Param('id') id: string, @Body() data: UpdateDto) {
+    async update(@Param('id') id: string, @Body(new ValidationPipe(_UpdateDto)) data: UpdateDto) {
       await this.service.update(id, data);
     }
 
