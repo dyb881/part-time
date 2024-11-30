@@ -1,16 +1,22 @@
 import { applyDecorators, Get, Post, Put, Delete, Controller } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiResponseMetadata, ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiQuery } from '@nestjs/swagger';
 
 const methods = { Get, Post, Put, Delete };
+
+export type MethodOptions = {
+  res?: Function | [Function]; // 接口响应数据类型
+  body?: Function | [Function]; // 接口请求体内容类型
+  query?: Function | [Function]; // 接口请求参数类型
+};
 
 /**
  * 请求方法注册
  */
-export function Method(
+export const Method = (
   summary: string, // 方法描述
   methodAndPath: string | [string, string], // 请求方法类型与路径
-  type?: ApiResponseMetadata['type'], // 接口响应数据类型
-) {
+  options?: MethodOptions,
+) => {
   const decorators: Array<ClassDecorator | MethodDecorator | PropertyDecorator> = [];
 
   // 定义接口文档标题
@@ -21,18 +27,20 @@ export function Method(
   const [method, path] = methodAndPath;
   decorators.push(methods[method](path));
 
-  // 定义返回数据类型
-  type && decorators.push(ApiResponse({ type }));
+  const { res, body, query } = options || {};
+  res && decorators.push(ApiResponse({ type: res }));
+  body && decorators.push(ApiBody({ type: body }));
+  query && decorators.push(ApiQuery({ type: query }));
 
   return applyDecorators(...decorators);
-}
+};
 
 /**
  * api 接口路径定义
  */
-export function ApiPath(
+export const ApiPath = (
   prefix: string | string[], // 控制器接口路由
   ...tags: string[] // 控制器描述
-) {
+) => {
   return applyDecorators(ApiTags(...tags), Controller(prefix));
-}
+};

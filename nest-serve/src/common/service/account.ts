@@ -1,29 +1,28 @@
-import { BadRequestException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, UnauthorizedException, Req } from '@nestjs/common';
 import { FindManyOptions } from 'typeorm';
 import { TransformInstanceToPlain } from 'class-transformer';
 import { sha512 } from 'js-sha512';
 import { IdsDto, AccountLoginDto } from '../dto';
 import { insLike, insNull } from '../tools';
-import { CommonService, ICommonService } from './common';
-
-/**
- * curd 帐号服务类型
- */
-export interface IAccountService extends ICommonService {
-  login: any;
-}
+import { CommonService, TClass } from './common';
 
 /**
  * crud 帐号服务
  */
-export function AccountService<
-  CreateDto = any,
-  UpdateDto = any,
-  QueryDto = any,
-  PaginationQueryDto = any,
-  Entity = any,
->(_Entity: Entity) {
-  class AccountService extends CommonService<CreateDto, UpdateDto, QueryDto, PaginationQueryDto>(_Entity) {
+export const AccountService = <
+  Entity = any, // 实体
+  CreateDto = any, // 创建
+  UpdateDto = any, // 更新
+  QueryDto = any, // 查询条件
+  PaginationQueryDto = any, // 分页查询条件
+>(
+  _Entity: TClass<Entity>,
+  _CreateDto: TClass<CreateDto>,
+  _UpdateDto: TClass<UpdateDto>,
+  _QueryDto: TClass<QueryDto>,
+  _PaginationQueryDto: TClass<PaginationQueryDto>,
+) => {
+  class AccountService extends CommonService(_Entity, _CreateDto, _UpdateDto, _QueryDto, _PaginationQueryDto) {
     /**
      * 给账号固定参数加上模糊查询
      */
@@ -45,8 +44,9 @@ export function AccountService<
      */
     async create(data: CreateDto) {
       const { username } = data as any;
-      const one = await this.repository.findOne({ username } as any);
+      const one = await this.repository.findOne({ where: { username } as any });
       if (one) throw new BadRequestException('用户名已存在');
+      Object.assign(data, { reg_ip: this.req.clientIp }); // 注入创建ip
       await super.create(data);
     }
 
@@ -62,15 +62,26 @@ export function AccountService<
      * 登录
      */
     @TransformInstanceToPlain()
-    async login({ username, password }: AccountLoginDto): Promise<Entity> {
-      const one: any = await this.repository.findOne({ username } as any);
+    async login(
+      { username, password }: AccountLoginDto,
+      validatorAccount?: (_Entity: Entity) => void,
+    ): Promise<Entity> {
+      const one: any = await this.repository.findOne({ where: { username } as any });
       // 账号不存在或密码错误的情况下，提示登录失败
       if (!one || one.password !== sha512(password)) {
         throw new UnauthorizedException('登录失败');
       }
+
+      // 验证账号
+      validatorAccount?.(one);
+
+      // 注入登录IP和登录时间
+      Object.assign(one, { login_ip: this.req.clientIp, login_date: new Date() });
+      super.update(one.id, one);
+
       return one;
     }
   }
 
   return class extends AccountService {};
-}
+};

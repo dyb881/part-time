@@ -13,7 +13,7 @@ export type DtoParamOptions = ApiPropertyOptions & {
 /**
  * 数据传输对象参数装饰器
  */
-export function DtoParam(name: string, _options?: DtoParamOptions) {
+export const DtoParam = (name: string, _options?: DtoParamOptions) => {
   const decorators: Array<ClassDecorator | MethodDecorator | PropertyDecorator> = [];
 
   let { isInt, isDate, matches, required = true, enum: _enum, ...options } = _options || {};
@@ -62,4 +62,4 @@ export function DtoParam(name: string, _options?: DtoParamOptions) {
   decorators.push(ApiProperty({ description: name, ...options })); // 文档
 
   return applyDecorators(...decorators);
-}
+};

@@ -1,40 +1,40 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, Inject } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindManyOptions } from 'typeorm';
 import { TransformInstanceToPlain } from 'class-transformer';
 import { toWhere } from '../tools';
 import { IdsDto } from '../dto';
 
-/**
- * curd 公共服务类型
- */
-export interface ICommonService {
-  getList: any;
-  getListAndCount: any;
-  get: any;
-  create: any;
-  update: any;
-  delete: any;
-}
+export type TClass<T> = new (...args: any[]) => T;
 
 /**
  * crud 公共服务
  */
-export function CommonService<
-  CreateDto = any, // 创建
-  UpdateDto = any, // 更新
-  QueryDto = any, // 查询条件
-  PaginationQueryDto = any, // 分页查询条件
-  Entity = any, // 实体
->(_Entity: Entity) {
-  class CommonService implements ICommonService {
-    constructor(@InjectRepository(_Entity as Function) readonly repository: Repository<Entity>) {}
+export const CommonService = <
+  Entity, // 实体
+  CreateDto, // 创建
+  UpdateDto, // 更新
+  QueryDto, // 查询条件
+  PaginationQueryDto, // 分页查询条件
+>(
+  _Entity: TClass<Entity>,
+  _CreateDto: TClass<CreateDto>,
+  _UpdateDto: TClass<UpdateDto>,
+  _QueryDto: TClass<QueryDto>,
+  _PaginationQueryDto: TClass<PaginationQueryDto>,
+) => {
+  class CommonService {
+    constructor(
+      @InjectRepository(_Entity) readonly repository: Repository<Entity>,
+      @Inject(REQUEST) readonly req: any,
+    ) {}
 
     /**
      * 查询所有数据
      */
     @TransformInstanceToPlain()
-    async getList(data: QueryDto, options?: FindManyOptions<Entity>) {
+    async getList(data: QueryDto, options?: FindManyOptions<Entity>): Promise<Entity[]> {
       const list = await this.repository.find({
         where: toWhere(data),
         order: { create_date: 'DESC' } as any,
@@ -47,7 +47,10 @@ export function CommonService<
      * 查询数据数据与总数
      */
     @TransformInstanceToPlain()
-    async getListAndCount(_data: PaginationQueryDto, options?: FindManyOptions<Entity>) {
+    async getListAndCount(
+      _data: PaginationQueryDto,
+      options?: FindManyOptions<Entity>,
+    ): Promise<{ list: Entity[]; total: number }> {
       const { current, pageSize, ...data } = _data as any;
       const [list, total] = await this.repository.findAndCount({
         where: toWhere(data),
@@ -93,4 +96,4 @@ export function CommonService<
   }
 
   return class extends CommonService {};
-}
+};

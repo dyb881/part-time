@@ -3,7 +3,7 @@ import { DtoParam } from '../tools';
 /**
  * 生成查询分页
  */
-export function PaginationQueryDto<Dto extends new (...args: any[]) => any>(_Dto: Dto) {
+export const PaginationQueryDto = <Dto extends new (...args: any[]) => any>(_Dto: Dto) => {
   class PaginationQueryDto extends _Dto {
     @DtoParam('当前页码', { isInt: true, default: 1 })
     current: number;
@@ -12,12 +12,12 @@ export function PaginationQueryDto<Dto extends new (...args: any[]) => any>(_Dto
     pageSize: number;
   }
   return class extends PaginationQueryDto {};
-}
+};
 
 /**
  * 分页数据
  */
-export function PaginationDto<Dto extends Function>(_Dto: Dto) {
+export const PaginationDto = <Dto extends Function>(_Dto: Dto) => {
   class PaginationDto {
     @DtoParam('列表', { type: [_Dto] })
     list: Dto[];
@@ -26,7 +26,7 @@ export function PaginationDto<Dto extends Function>(_Dto: Dto) {
     total: number;
   }
   return class extends PaginationDto {};
-}
+};
 
 /**
  * ID 数组

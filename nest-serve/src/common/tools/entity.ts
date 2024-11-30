@@ -13,7 +13,7 @@ export type EntityColumnOptions = ColumnOptions & {
 /**
  * 实体列装饰器
  */
-export function EntityColumn(name: string, length?: number | EntityColumnOptions, _options?: EntityColumnOptions) {
+export const EntityColumn = (name: string, length?: number | EntityColumnOptions, _options?: EntityColumnOptions) => {
   const decorators: Array<ClassDecorator | MethodDecorator | PropertyDecorator> = [];
 
   // 合成配置项
@@ -38,7 +38,7 @@ export function EntityColumn(name: string, length?: number | EntityColumnOptions
   else decorators.push(ApiProperty({ description: name, ...apiPropertyOptions })); // 文档
 
   return applyDecorators(...decorators);
-}
+};
 
 // ---------------------- 数据转化器生成 ---------------------- //
 

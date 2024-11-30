@@ -9,18 +9,20 @@ import {
 } from './admin.dto';
 
 @Injectable()
-export class AccountAdminService extends AccountService<
+export class AccountAdminService extends AccountService(
+  AccountAdmin,
   AccountAdminCreateDto,
   AccountAdminUpdateDto,
   AccountAdminQueryDto,
-  AccountAdminPaginationQueryDto
->(AccountAdmin) {
+  AccountAdminPaginationQueryDto,
+) {
   /**
    * 登录
    */
-  async login(data: AccountLoginDto) {
-    const one = await super.login(data);
-    if (one.status !== 1) throw new UnauthorizedException(`账号${ACCOUNT_ADMIN_STATUS[one.status]}`);
-    return one;
+  login(data: AccountLoginDto) {
+    return super.login(data, (one: AccountAdmin) => {
+      // 验证帐号状态
+      if (one.status !== 1) throw new UnauthorizedException(`账号${ACCOUNT_ADMIN_STATUS[one.status]}`);
+    });
   }
 }
