@@ -10,11 +10,11 @@ import { CommonService, TClass } from './common';
  * crud 帐号服务
  */
 export const AccountService = <
-  Entity = any, // 实体
-  CreateDto = any, // 创建
-  UpdateDto = any, // 更新
-  QueryDto = any, // 查询条件
-  PaginationQueryDto = any, // 分页查询条件
+  Entity, // 实体
+  CreateDto, // 创建
+  UpdateDto, // 更新
+  QueryDto, // 查询条件
+  PaginationQueryDto, // 分页查询条件
 >(
   _Entity: TClass<Entity>,
   _CreateDto: TClass<CreateDto>,
@@ -67,6 +67,7 @@ export const AccountService = <
       validatorAccount?: (_Entity: Entity) => void,
     ): Promise<Entity> {
       const one: any = await this.repository.findOne({ where: { username } as any });
+
       // 账号不存在或密码错误的情况下，提示登录失败
       if (!one || one.password !== sha512(password)) {
         throw new UnauthorizedException('登录失败');
@@ -76,8 +77,9 @@ export const AccountService = <
       validatorAccount?.(one);
 
       // 注入登录IP和登录时间
-      Object.assign(one, { login_ip: this.req.clientIp, login_date: new Date() });
-      super.update(one.id, one);
+      const insLoginInfo: any = { login_ip: this.req.clientIp, login_date: new Date() };
+      this.repository.update(one.id, insLoginInfo);
+      Object.assign(one, insLoginInfo);
 
       return one;
     }

@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { DtoParam } from '../../tools';
 
 /**
  * 文件限制配置
@@ -20,15 +20,15 @@ export class FileLimit {
  * 文件上传数据
  */
 export class UploadDto {
-  @ApiProperty({ description: '上传文件', type: 'string', format: 'binary' })
-  file: Express.Multer.File;;
+  @DtoParam('上传文件', { type: 'string', format: 'binary' })
+  file: Express.Multer.File;
 }
 
 /**
  * 上传后响应数据
  */
 export class UploadResDto {
-  @ApiProperty({ description: '访问地址' })
+  @DtoParam('访问地址')
   url: string;
 }
 
@@ -36,19 +36,19 @@ export class UploadResDto {
  * OSS 临时授权配置
  */
 export class OSSSTSOptionsDto {
-  @ApiProperty({ description: '阿里云 accessKeyId' })
+  @DtoParam('阿里云 accessKeyId')
   accessKeyId: string;
 
-  @ApiProperty({ description: '阿里云 accessKeySecret' })
+  @DtoParam('阿里云 accessKeySecret')
   accessKeySecret: string;
 
-  @ApiProperty({ description: 'STS 临时授权 token' })
+  @DtoParam('STS 临时授权 token')
   stsToken: string;
 
-  @ApiProperty({ description: 'OSS 区域' })
+  @DtoParam('OSS 区域')
   region: string;
 
-  @ApiProperty({ description: 'OSS 桶' })
+  @DtoParam('OSS 桶')
   bucket: string;
 }
 
@@ -56,10 +56,10 @@ export class OSSSTSOptionsDto {
  * OSS 验证属性
  */
 export class OSSValidateDto {
-  @ApiProperty({ description: '文件名' })
+  @DtoParam('文件名')
   name: string;
 
-  @ApiProperty({ description: '文件大小' })
+  @DtoParam('文件大小')
   size: number;
 }
 
@@ -67,6 +67,6 @@ export class OSSValidateDto {
  * OSS 上传对象属性
  */
 export class OSSPutObjectDto extends UploadResDto {
-  @ApiProperty({ description: 'OSS对象名称' })
+  @DtoParam('OSS对象名称')
   name: string;
 }

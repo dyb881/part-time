@@ -1,4 +1,4 @@
-import { ApiPath, CommonController } from '../../common';
+import { ApiPathAuth, CommonController } from '../../common';
 import { AccountAdminService } from './admin.service';
 import { AccountAdmin } from './admin.entity';
 import {
@@ -9,7 +9,7 @@ import {
   AccountAdminPaginationDto,
 } from './admin.dto';
 
-@ApiPath('admin', '管理员帐号')
+@ApiPathAuth('admin', '管理员帐号')
 export class AccountAdminController extends CommonController(
   AccountAdmin,
   AccountAdminCreateDto,

@@ -1,9 +1,10 @@
-import { Body } from '@nestjs/common';
+import { Body, Req } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { ApiPath, Method, AccountEntity, AccountLoginDto } from '../../common';
 import { AccountAdminService } from '../admin/admin.service';
-import { AdminLoginResDto } from './auth.dto';
+import { AdminAuthDto, AdminDto } from './auth.dto';
+import { AccountAdmin } from '../admin/admin.entity';
 
 @ApiPath('auth', '鉴权')
 export class AuthController {
@@ -16,28 +17,38 @@ export class AuthController {
   /**
    * 生成加密串
    */
-  getToken(accountAdmin: AccountEntity) {
-    const { id, username } = accountAdmin;
+  getToken(account: AccountEntity) {
+    const { id, username } = account;
     const key = `secret-${this.configService.get('jwt.validateKey')}`;
     return this.jwtService.sign({ [key]: id, username });
   }
 
-  @Method('管理员登陆', ['Post', 'admin'], { res: AdminLoginResDto })
+  async getAdminRole(accountAdmin: AccountAdmin) {
+    const { roleId } = accountAdmin;
+
+    return {};
+  }
+
+  @Method('管理员登陆', ['Post', 'admin'], { res: AdminAuthDto })
   async admin(@Body() data: AccountLoginDto) {
     const user = await this.accountAdminService.login(data);
 
     // 获取鉴权 token
     const access_token = this.getToken(user);
 
-    return { ...user, access_token };
+    // 查询角色信息
+    const role = await this.getAdminRole(user);
+
+    return { ...user, access_token, role };
   }
 
-  // @Get()
-  // @ApiBearerAuth()
-  // @UseGuards(AuthGuard('jwt'))
-  // @ApiResponse({ status: 200, type: AdminInfoDto })
-  // @ApiOperation('获取帐号信息')
-  // getInfo(@Req() req) {
-  //   return this.authService.getInfo(req.user.id);
-  // }
+  @Method('获取帐号信息', ['Get', 'admin'], { res: AdminDto, auth: true })
+  async getInfo(@Req() req: any) {
+    const user = await this.accountAdminService.get(req.user.id);
+
+    // 查询角色信息
+    const role = await this.getAdminRole(user);
+
+    return { ...user, role };
+  }
 }
