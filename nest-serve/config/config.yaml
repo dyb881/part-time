@@ -23,9 +23,9 @@ cache:
 # 鉴权配置
 
 jwt:
-  secret: nestservedyb881 # 加密串，生产环境必须更改
+  secret: DZhu1yNJcAYYrGsktfQE # 加密串，生产环境必须更改
   expiresIn: 36000s # 过期时间
-  validateKey: user_id # 验证key，生产环境必须更改
+  validateKey: 7kk2RGVBmWM9nuxEsvon # 验证key，生产环境必须更改
 
 # Swagger 配置
 

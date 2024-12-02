@@ -5,6 +5,7 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { mw } from 'request-ip';
+import { initialize } from './common/initialize';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -15,10 +16,10 @@ async function bootstrap() {
   app.use(mw());
 
   // 获取配置服务
-  const configService = app.get<ConfigService>(ConfigService);
+  const configService = await app.resolve<ConfigService>(ConfigService);
 
   // 插入日志
-  const loggerService = app.get<LoggerService>(WINSTON_MODULE_NEST_PROVIDER);
+  const loggerService = await app.resolve<LoggerService>(WINSTON_MODULE_NEST_PROVIDER);
   app.useLogger(loggerService);
 
   const serve = configService.get('serve'); // 服务配置
@@ -45,6 +46,8 @@ async function bootstrap() {
   // 输出链接
   loggerService.log(`http://localhost:${serve.port}/${swagger.path}`, '接口文档');
   loggerService.log(`http://localhost:${serve.port}/${serve.prefix}`, '接口地址');
+
+  initialize(app);
 }
 
 bootstrap();

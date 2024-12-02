@@ -1,5 +1,5 @@
 import { DtoParam, PaginationQueryDto, PaginationDto } from '../../common';
-import { Role } from './role.entity';
+import { Role,Permissions } from './role.entity';
 
 /**
  * 查询列表对象
@@ -27,7 +27,7 @@ export class RoleCreateDto {
   name: string;
 
   @DtoParam('权限配置')
-  permissions: any;
+  permissions: Permissions;
 }
 
 /**

@@ -5,6 +5,7 @@
 /uploads
 /config/development.yaml
 /config/production.yaml
+db.sql
 
 # Logs
 logs

@@ -10,12 +10,4 @@ export class RoleService extends CommonService(
   RoleUpdateDto,
   RoleQueryDto,
   RolePaginationQueryDto,
-) {
-  /**
-   * 获取权限配置
-   */
-  getPermissionConfig() {
-    const permission = new Permissions();
-    return permission;
-  }
-}
+) {}

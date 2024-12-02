@@ -3,7 +3,7 @@ import { FindManyOptions } from 'typeorm';
 import { TransformInstanceToPlain } from 'class-transformer';
 import { sha512 } from 'js-sha512';
 import { IdsDto, AccountLoginDto } from '../dto';
-import { insLike, insNull } from '../tools';
+import { insLike, insNull, toIp, format } from '../tools';
 import { CommonService, TClass } from './common';
 
 /**
@@ -46,7 +46,7 @@ export const AccountService = <
       const { username } = data as any;
       const one = await this.repository.findOne({ where: { username } as any });
       if (one) throw new BadRequestException('用户名已存在');
-      Object.assign(data, { reg_ip: this.req.clientIp }); // 注入创建ip
+      Object.assign(data, { reg_ip: this.req?.clientIp }); // 注入创建ip
       await super.create(data);
     }
 
@@ -77,8 +77,9 @@ export const AccountService = <
       validatorAccount?.(one);
 
       // 注入登录IP和登录时间
-      const insLoginInfo: any = { login_ip: this.req.clientIp, login_date: new Date() };
+      const insLoginInfo: any = { login_ip: toIp(this.req.clientIp), login_date: format(new Date()) };
       this.repository.update(one.id, insLoginInfo);
+
       Object.assign(one, insLoginInfo);
 
       return one;
