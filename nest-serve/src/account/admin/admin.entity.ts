@@ -10,7 +10,7 @@ export const ACCOUNT_ADMIN_STATUS = ['未审核', '已审核', '已冻结'];
  * 数据实体
  */
 @Entity()
-export class AccountAdmin extends AccountEntity {
+export class Admin extends AccountEntity {
   @EntityColumn('角色', 36)
   roleId: string;
 

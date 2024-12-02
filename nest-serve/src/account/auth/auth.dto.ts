@@ -1,10 +1,10 @@
 import { DtoParam } from '../../common';
-import { AccountAdmin } from '../admin/admin.entity';
+import { Admin } from '../admin/admin.entity';
 
 /**
  * 管理员账号信息
  */
-export class AdminDto extends AccountAdmin {
+export class AdminDto extends Admin {
   @DtoParam('角色信息')
   role: any;
 }

@@ -1,21 +1,21 @@
 import { ApiPathAuth, CommonController } from '../../common';
-import { AccountAdminService } from './admin.service';
-import { AccountAdmin } from './admin.entity';
+import { AdminService } from './admin.service';
+import { Admin } from './admin.entity';
 import {
-  AccountAdminCreateDto,
-  AccountAdminUpdateDto,
-  AccountAdminQueryDto,
-  AccountAdminPaginationQueryDto,
-  AccountAdminPaginationDto,
+  AdminCreateDto,
+  AdminUpdateDto,
+  AdminQueryDto,
+  AdminPaginationQueryDto,
+  AdminPaginationDto,
 } from './admin.dto';
 
 @ApiPathAuth('admin', '管理员帐号')
-export class AccountAdminController extends CommonController(
-  AccountAdmin,
-  AccountAdminCreateDto,
-  AccountAdminUpdateDto,
-  AccountAdminQueryDto,
-  AccountAdminPaginationQueryDto,
-  AccountAdminPaginationDto,
-  AccountAdminService,
+export class AdminController extends CommonController(
+  Admin,
+  AdminCreateDto,
+  AdminUpdateDto,
+  AdminQueryDto,
+  AdminPaginationQueryDto,
+  AdminPaginationDto,
+  AdminService,
 ) {}

@@ -1,17 +1,17 @@
 import {
+  DtoParam,
   PaginationQueryDto,
   PaginationDto,
-  DtoParam,
   AccountQueryDto,
   AccountCreateDto,
   AccountUpdateDto,
 } from '../../common';
-import { ACCOUNT_ADMIN_STATUS, AccountAdmin } from './admin.entity';
+import { ACCOUNT_ADMIN_STATUS, Admin } from './admin.entity';
 
 /**
  * 查询条件
  */
-export class AccountAdminQueryDto extends AccountQueryDto {
+export class AdminQueryDto extends AccountQueryDto {
   @DtoParam('角色', { required: false })
   roleId?: string;
 
@@ -22,17 +22,17 @@ export class AccountAdminQueryDto extends AccountQueryDto {
 /**
  * 查询分页数据条件
  */
-export class AccountAdminPaginationQueryDto extends PaginationQueryDto(AccountAdminQueryDto) {}
+export class AdminPaginationQueryDto extends PaginationQueryDto(AdminQueryDto) {}
 
 /**
  * 分页数据
  */
-export class AccountAdminPaginationDto extends PaginationDto(AccountAdmin) {}
+export class AdminPaginationDto extends PaginationDto(Admin) {}
 
 /**
  * 创建数据对象
  */
-export class AccountAdminCreateDto extends AccountCreateDto {
+export class AdminCreateDto extends AccountCreateDto {
   @DtoParam('角色')
   roleId: string;
 
@@ -43,7 +43,7 @@ export class AccountAdminCreateDto extends AccountCreateDto {
 /**
  * 编辑数据对象
  */
-export class AccountAdminUpdateDto extends AccountUpdateDto {
+export class AdminUpdateDto extends AccountUpdateDto {
   @DtoParam('角色')
   roleId: string;
 

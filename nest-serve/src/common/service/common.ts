@@ -1,8 +1,9 @@
-import { BadRequestException, Inject } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindManyOptions } from 'typeorm';
+import { BadRequestException, Inject } from '@nestjs/common';
 import { TransformInstanceToPlain } from 'class-transformer';
+import { Repository, FindManyOptions } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ConfigService } from '@nestjs/config';
 import { toWhere } from '../tools';
 import { IdsDto } from '../dto';
 
@@ -28,6 +29,7 @@ export const CommonService = <
     constructor(
       @InjectRepository(_Entity) readonly repository: Repository<Entity>,
       @Inject(REQUEST) readonly req: any,
+      readonly configService: ConfigService,
     ) {}
 
     /**

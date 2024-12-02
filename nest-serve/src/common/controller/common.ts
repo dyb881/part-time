@@ -2,8 +2,6 @@ import { Param, Query, Body, Inject, BadRequestException } from '@nestjs/common'
 import { Method } from '../tools';
 import { IdsDto } from '../dto';
 import { TClass } from '../service';
-import { AccountAdminCreateDto } from '../../account/admin/admin.dto';
-import { validate } from 'class-validator';
 import { ValidationPipe } from './validation.pipe';
 
 /**

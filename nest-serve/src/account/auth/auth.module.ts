@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { AuthController } from './auth.controller';
-import { AccountAdminModule } from '../admin/admin.module';
+import { AdminModule } from '../admin/admin.module';
 
 /**
  * 配置模块
@@ -17,7 +17,7 @@ import { AccountAdminModule } from '../admin/admin.module';
       },
       inject: [ConfigService],
     }),
-    AccountAdminModule,
+    AdminModule,
   ],
   controllers: [AuthController],
   providers: [JwtStrategy],
