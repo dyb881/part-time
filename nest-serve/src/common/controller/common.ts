@@ -27,32 +27,32 @@ export function CommonController<
   class CommonController {
     constructor(@Inject(_Service) readonly service: Service) {}
 
-    @Method('查询所有数据', ['Get', 'all'], { res: [_Entity], query: _QueryDto })
+    @Method('查询所有数据', ['Get', 'all'], { res: [_Entity], query: _QueryDto, roles: [_Entity.name, 'query'] })
     getList(@Query(new ValidationPipe(_QueryDto)) data: QueryDto) {
       return this.service.getList(data);
     }
 
-    @Method('查询分页列表', 'Get', { res: _PaginationDto, query: _PaginationQueryDto })
+    @Method('查询分页列表', 'Get', { res: _PaginationDto, query: _PaginationQueryDto, roles: [_Entity.name, 'query'] })
     getListAndCount(@Query(new ValidationPipe(_PaginationQueryDto)) data: PaginationQueryDto) {
       return this.service.getListAndCount(data);
     }
 
-    @Method('查询详情', ['Get', ':id'], { res: _Entity })
+    @Method('查询详情', ['Get', ':id'], { res: _Entity, roles: [_Entity.name, 'query'] })
     get(@Param('id') id: string) {
       return this.service.get(id);
     }
 
-    @Method('添加', 'Post', { body: _CreateDto })
+    @Method('添加', 'Post', { body: _CreateDto, roles: [_Entity.name, 'create'] })
     async create(@Body(new ValidationPipe(_CreateDto)) data: CreateDto) {
       await this.service.create(data);
     }
 
-    @Method('编辑', ['Put', ':id'], { body: _UpdateDto })
+    @Method('编辑', ['Put', ':id'], { body: _UpdateDto, roles: [_Entity.name, 'update'] })
     async update(@Param('id') id: string, @Body(new ValidationPipe(_UpdateDto)) data: UpdateDto) {
       await this.service.update(id, data);
     }
 
-    @Method('删除', 'Delete', { body: IdsDto })
+    @Method('删除', 'Delete', { body: IdsDto, roles: [_Entity.name, 'delete'] })
     async delete(@Body() { ids }: IdsDto) {
       await this.service.delete(ids);
     }

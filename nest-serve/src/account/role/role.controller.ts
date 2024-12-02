@@ -13,7 +13,7 @@ export class RoleController extends CommonController(
   RolePaginationDto,
   RoleService,
 ) {
-  @Method('获取权限配置', ['Get', 'config'], { res: Permissions, auth: true })
+  @Method('获取权限配置', ['Get', 'config'], { res: Permissions, auth: true, roles: [Role.name, 'query'] })
   getConfig() {
     return this.service.getPermissionConfig();
   }

@@ -2,9 +2,12 @@ import { Body, Req } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { ApiPath, Method, AccountEntity, AccountLoginDto } from '../../common';
+
 import { AdminService } from '../admin/admin.service';
-import { AdminAuthDto, AdminDto } from './auth.dto';
+import { UserService } from '../user/user.service';
 import { Admin } from '../admin/admin.entity';
+
+import { AdminAuthDto, AdminDto, UserAuthDto, UserDto } from './auth.dto';
 
 @ApiPath('auth', '鉴权')
 export class AuthController {
@@ -12,6 +15,7 @@ export class AuthController {
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
     private readonly adminService: AdminService,
+    private readonly userService: UserService,
   ) {}
 
   /**
@@ -31,24 +35,41 @@ export class AuthController {
 
   @Method('管理员登陆', ['Post', 'admin'], { res: AdminAuthDto })
   async admin(@Body() data: AccountLoginDto) {
-    const user = await this.adminService.login(data);
+    const admin = await this.adminService.login(data);
+
+    // 获取鉴权 token
+    const access_token = this.getToken(admin);
+
+    // 查询角色信息
+    const role = await this.getAdminRole(admin);
+
+    return { ...admin, access_token, role };
+  }
+
+  @Method('获取管理员帐号信息', ['Get', 'admin'], { res: AdminDto, auth: true })
+  async getAdminInfo(@Req() req: any) {
+    const admin = await this.adminService.get(req.user.id);
+
+    // 查询角色信息
+    const role = await this.getAdminRole(admin);
+
+    return { ...admin, role };
+  }
+
+  @Method('用户登陆', ['Post', 'user'], { res: UserAuthDto })
+  async user(@Body() data: AccountLoginDto) {
+    const user = await this.userService.login(data);
 
     // 获取鉴权 token
     const access_token = this.getToken(user);
 
-    // 查询角色信息
-    const role = await this.getAdminRole(user);
-
-    return { ...user, access_token, role };
+    return { ...user, access_token };
   }
 
-  @Method('获取帐号信息', ['Get', 'admin'], { res: AdminDto, auth: true })
-  async getInfo(@Req() req: any) {
+  @Method('获取用户帐号信息', ['Get', 'user'], { res: UserDto, auth: true })
+  async getUserInfo(@Req() req: any) {
     const user = await this.adminService.get(req.user.id);
 
-    // 查询角色信息
-    const role = await this.getAdminRole(user);
-
-    return { ...user, role };
+    return { ...user };
   }
 }

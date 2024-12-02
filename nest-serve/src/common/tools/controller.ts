@@ -2,7 +2,7 @@ import { applyDecorators, Get, Post, Put, Delete, Controller, UseGuards } from '
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 
-import { RolesGuard } from '../controller/roles.guard';
+import { Roles, RolesGuard } from '../controller/roles.guard';
 
 const methods = { Get, Post, Put, Delete };
 
@@ -11,6 +11,7 @@ export type MethodOptions = {
   body?: Function | [Function]; // 接口请求体内容类型
   query?: Function | [Function]; // 接口请求参数类型
   auth?: boolean; // 开启授权守卫
+  roles?: string[]; // 角色权限
 };
 
 /**
@@ -31,13 +32,14 @@ export const Method = (
   const [method, path] = methodAndPath;
   decorators.push(methods[method](path));
 
-  const { res, body, query, auth } = options || {};
+  const { res, body, query, auth, roles } = options || {};
 
   res && decorators.push(ApiResponse({ type: res }));
   body && decorators.push(ApiBody({ type: body }));
   query && decorators.push(ApiQuery({ type: query }));
 
   auth && decorators.push(ApiAuth());
+  roles && decorators.push(Roles(roles));
 
   return applyDecorators(...decorators);
 };
