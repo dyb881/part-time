@@ -3,6 +3,8 @@
 /node_modules
 /build
 /uploads
+/config/development.yaml
+/config/production.yaml
 
 # Logs
 logs
