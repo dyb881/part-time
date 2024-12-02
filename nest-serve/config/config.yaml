@@ -20,6 +20,13 @@ cache:
     port:
     auth_pass:
 
+# 鉴权配置
+
+jwt:
+  secret: nestservedyb881 # 加密串，生产环境必须更改
+  expiresIn: 36000s # 过期时间
+  validateKey: user_id # 验证key，生产环境必须更改
+
 # Swagger 配置
 
 swagger:

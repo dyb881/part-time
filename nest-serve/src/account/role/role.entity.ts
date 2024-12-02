@@ -6,11 +6,11 @@ import { CommonEntity, EntityColumn } from '../../common';
  * 权限动作
  */
 export class Actions {
-  constructor() {
-    this.query = false;
-    this.create = false;
-    this.update = false;
-    this.delete = false;
+  constructor(defaultPermissions = false) {
+    this.query = defaultPermissions;
+    this.create = defaultPermissions;
+    this.update = defaultPermissions;
+    this.delete = defaultPermissions;
   }
 
   @ApiProperty({ description: '查询' })
@@ -30,12 +30,12 @@ export class Actions {
  * 权限配置（模块名称：权限动作）
  */
 export class Permissions {
-  constructor() {
-    this.role = new Actions();
-    this.admin = new Actions();
-    this.user = new Actions();
-    this.category = new Actions();
-    this.article = new Actions();
+  constructor(defaultPermissions?: boolean) {
+    this.role = new Actions(defaultPermissions);
+    this.admin = new Actions(defaultPermissions);
+    this.user = new Actions(defaultPermissions);
+    this.category = new Actions(defaultPermissions);
+    this.article = new Actions(defaultPermissions);
   }
 
   @ApiProperty({ description: '角色管理' })

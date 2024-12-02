@@ -3,6 +3,7 @@
 ali:
   accessKeyId:
   accessKeySecret:
+  
   # OSS配置
   oss:
     bucket:
