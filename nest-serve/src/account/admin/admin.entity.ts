@@ -7,7 +7,7 @@ import { AccountEntity, EntityColumn } from '../../common';
 export const ACCOUNT_ADMIN_STATUS = ['未审核', '已审核', '已冻结'];
 
 /**
- * 数据实体
+ * 管理员
  */
 @Entity()
 export class Admin extends AccountEntity {

@@ -16,8 +16,6 @@ permission:
     account: [role, admin, user]
     # 信息模块
     infos: [category, article]
-    # 系统模块
-    system: [files]
 
 # 权限模块名称
 
