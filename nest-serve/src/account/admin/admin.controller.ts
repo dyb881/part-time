@@ -9,7 +9,7 @@ import {
   AdminPaginationDto,
 } from './admin.dto';
 
-@ApiPathAuth('admin', '管理员帐号')
+@ApiPathAuth('admin', '管理员帐号管理')
 export class AdminController extends CommonController(
   Admin,
   AdminCreateDto,

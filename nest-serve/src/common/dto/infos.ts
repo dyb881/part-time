@@ -3,7 +3,7 @@ import { INFOS_STATUS } from '../entity/infos';
 
 // ------------------------ 基础信息 ------------------------ //
 
-export class BasicInfoQueryDto {
+export class InfoBasicQueryDto {
   @DtoParam('标题', { required: false })
   title?: string;
 
@@ -11,7 +11,7 @@ export class BasicInfoQueryDto {
   status?: number;
 }
 
-export class BasicInfoCreateDto {
+export class InfoBasicCreateDto {
   @DtoParam('标题')
   title: string;
 
@@ -25,29 +25,29 @@ export class BasicInfoCreateDto {
   status: number;
 }
 
-export class BasicInfoUpdateDto extends BasicInfoCreateDto {}
+export class InfoBasicUpdateDto extends InfoBasicCreateDto {}
 
 // ------------------------ 基础信息 ------------------------ //
 
 // ------------------------ 信息分类 ------------------------ //
 
-export class CategoryQueryDto extends BasicInfoQueryDto {
+export class InfoCategoryQueryDto extends InfoBasicQueryDto {
   @DtoParam('上级ID', { required: false })
   parentId?: string;
 }
 
-export class CategoryCreateDto extends BasicInfoCreateDto {
+export class InfoCategoryCreateDto extends InfoBasicCreateDto {
   @DtoParam('上级ID', { required: false })
   parentId?: string;
 }
 
-export class CategoryUpdateDto extends CategoryCreateDto {}
+export class InfoCategoryUpdateDto extends InfoCategoryCreateDto {}
 
 // ------------------------ 信息分类 ------------------------ //
 
 // ------------------------ 文章信息 ------------------------ //
 
-export class ArticleQueryDto extends BasicInfoQueryDto {
+export class InfoArticleQueryDto extends InfoBasicQueryDto {
   @DtoParam('简介', { required: false })
   summary?: string;
 
@@ -55,7 +55,7 @@ export class ArticleQueryDto extends BasicInfoQueryDto {
   content?: string;
 }
 
-export class ArticleCreateDto extends BasicInfoCreateDto {
+export class InfoArticleCreateDto extends InfoBasicCreateDto {
   @DtoParam('图组', { required: false })
   pictureGroup?: string[];
 
@@ -69,6 +69,6 @@ export class ArticleCreateDto extends BasicInfoCreateDto {
   hot: number;
 }
 
-export class ArticleUpdateDto extends ArticleCreateDto {}
+export class InfoArticleUpdateDto extends InfoArticleCreateDto {}
 
 // ------------------------ 文章信息 ------------------------ //

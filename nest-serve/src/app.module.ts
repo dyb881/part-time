@@ -1,15 +1,13 @@
 import { Module } from '@nestjs/common';
-import { RouterModule } from '@nestjs/core';
 import { CommonModule } from './common';
 import { AccountModule } from './account/account.module';
+import { InfosModule } from './infos/infos.module';
 
 @Module({
   imports: [
     CommonModule, // 公共模块
     AccountModule, // 帐号模块
-    
-    // 路由定义
-    RouterModule.register([{ path: 'account', module: AccountModule }]),
+    InfosModule, // 信息模块
   ],
 })
 export class AppModule {}

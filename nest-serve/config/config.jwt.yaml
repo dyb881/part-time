@@ -13,7 +13,7 @@ permission:
   # 权限模块
   apps:
     # 账号模块
-    account: [adminRole, admin, user]
+    account: [role, admin, user]
     # 信息模块
     infos: [category, article]
     # 系统模块
