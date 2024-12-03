@@ -9,7 +9,6 @@ import { AllExceptionFilter, TransformInterceptor } from './providers';
 
 // 缓存
 import { CacheModule } from '@nestjs/cache-manager';
-import { Cache } from 'cache-manager';
 // 其他持久化储存方式：https://github.com/jaredwray/keyv
 import KeyvSqlite from '@keyv/sqlite';
 
