@@ -5,6 +5,7 @@ import { JwtStrategy } from './jwt.strategy';
 import { AuthController } from './auth.controller';
 import { AdminModule } from '../admin/admin.module';
 import { UserModule } from '../user/user.module';
+import { RoleModule } from '../role/role.module';
 
 /**
  * 配置模块
@@ -20,6 +21,7 @@ import { UserModule } from '../user/user.module';
     }),
     AdminModule,
     UserModule,
+    RoleModule,
   ],
   controllers: [AuthController],
   providers: [JwtStrategy],

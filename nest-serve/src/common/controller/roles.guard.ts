@@ -1,6 +1,8 @@
 import { Reflector } from '@nestjs/core';
-import { Injectable, CanActivate, ExecutionContext, SetMetadata, Inject } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, LoggerService, Inject } from '@nestjs/common';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 import { get } from 'lodash';
 
 /**
@@ -16,7 +18,9 @@ export const Roles = Reflector.createDecorator<string[]>();
 export class RolesGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
-    @Inject(CACHE_MANAGER) private readonly cacheManager,
+    @Inject(CACHE_MANAGER) private readonly cacheManager: Cache,
+    @Inject(WINSTON_MODULE_NEST_PROVIDER)
+    private readonly loggerService: LoggerService,
   ) {}
 
   async canActivate(context: ExecutionContext) {
@@ -26,17 +30,22 @@ export class RolesGuard implements CanActivate {
     // 无权限标识的接口，直接通过
     if (!roles) return true;
 
-    console.log(roles);
+    try {
+      // 获取角色权限配置
+      const permissionsString = await this.cacheManager.get<string>(`permissions-${request.user.id}`);
 
-    // if (permissions) {
-    //   const [role] = permissions;
+      // 无缓存权限，直接拦截
+      if (!permissionsString) return false;
 
-    //   // 获取角色权限配置
-    //   const roles = await this.cacheManager.get(`permissions-${request.user.id}`);
+      const permissions = JSON.parse(permissionsString);
+      const key = roles.map((i) => i.toLowerCase()).join('.');
 
-    //   if (!get(roles, role)) return false;
-    // }
+      // 校验权限是否开启
+      return !get(permissions, key);
+    } catch (e) {
+      this.loggerService.error(e, '权限解析异常');
+    }
 
-    return true;
+    return false;
   }
 }

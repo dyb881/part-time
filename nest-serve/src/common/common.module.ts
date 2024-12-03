@@ -9,7 +9,9 @@ import { AllExceptionFilter, TransformInterceptor } from './providers';
 
 // 缓存
 import { CacheModule } from '@nestjs/cache-manager';
-import redisStore from 'cache-manager-redis-store';
+import { Cache } from 'cache-manager';
+// 其他持久化储存方式：https://github.com/jaredwray/keyv
+import KeyvSqlite from '@keyv/sqlite';
 
 // 数据库
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -27,9 +29,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       isGlobal: true,
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const redis = configService.get('cache.redis');
-        // 使用 redis 做缓存服务
-        return redis?.host ? { store: redisStore, ...redis } : {};
+        const database = configService.get<string>('cache.sqlite.database');
+        const filePath = path.join(rootPath, database); // 绝对文件路径
+        const keyvSqlite = new KeyvSqlite(filePath);
+        return { store: keyvSqlite };
       },
     }),
     // 数据库模块

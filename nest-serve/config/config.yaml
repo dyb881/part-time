@@ -8,23 +8,23 @@ serve:
 
 db:
   type: sqlite # 默认使用 sqlite，如果需要使用其他数据库，请安装对应驱动器
-  database: 'db.sql'
+  database: 'sqls/db.sql'
   autoLoadEntities: true # 自动加载实体
   synchronize: true # 自动同步表
 
 # 缓存配置
 
 cache:
-  redis: # 有值时，使用 redis 做缓存服务器
-    host:
-    port:
-    auth_pass:
+  # 使用文件数据库缓存
+  sqlite:
+    database: 'sqls/cache.sql' # 缓存数据库
+  # 其他持久化储存方式：https://github.com/jaredwray/keyv
 
 # 鉴权配置
 
 jwt:
   secret: DZhu1yNJcAYYrGsktfQE # 加密串，生产环境必须更改
-  expiresIn: 36000s # 过期时间
+  expiresIn: 604800000 # 过期时间 1000 * 60 * 60 * 24 * 7 毫秒 = 7 天 
   validateKey: 7kk2RGVBmWM9nuxEsvon # 验证key，生产环境必须更改
 
 # Swagger 配置
