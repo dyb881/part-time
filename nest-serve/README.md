@@ -24,35 +24,25 @@ NODE_ENV=production yarn start // 加载 production.yaml 覆盖配置
 
 环境变量为空时，默认会尝试加载 development.yaml
 
-
 ## 文件目录
 
-- 仪表盘
-  - 用户统计
-  - 商品统计
-  - 订单统计
-  - 支付统计
-- 账号管理
-  - 管理员账号
-  - 管理员角色（管理后台接口权限控制）
-  - 用户账号
-- 信息管理
-  - 信息分类
-  - 文章列表
-- 商品管理
-  - 商品分类
-  - 商品列表
-  - 订单管理
-  - 评论管理
-- 财务管理
-  - 订单支付
-- 系统管理
-  - 文件管理
-  - 配置管理
-    - 枚举配置
-    - 文件配置
-    - 权限配置
-    - 支付配置
-    - 自定义配置
-  - 操作日志
-  - 系统日志
+- common 公共模块
+  - tools 工具函数、二次封装的装饰器
+  - imports 默认模块
+    - config 配置模块
+    - logger 日志模块
+    - upload 文件上传模块
+  - providers 数据/异常拦截
+  - controller 公共控制器
+  - dto 公共数据对象
+  - entity 公共数据实体
+  - service 公共服务
+  - initialize.ts 项目初始化流程
+- account 帐号模块
+  - role 帐号角色
+  - admin 管理员帐号
+  - user 用户帐号
+  - auth 授权模块
+- infos 信息模块
+  - category 基础信息分类
+  - article 文章管理
