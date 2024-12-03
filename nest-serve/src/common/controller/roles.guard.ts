@@ -41,7 +41,7 @@ export class RolesGuard implements CanActivate {
       const key = roles.map((i) => i.toLowerCase()).join('.');
 
       // 校验权限是否开启
-      return !get(permissions, key);
+      return get(permissions, key);
     } catch (e) {
       this.loggerService.error(e, '权限解析异常');
     }
