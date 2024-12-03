@@ -1,5 +1,6 @@
 import { APP_PIPE, APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { Module, ValidationPipe } from '@nestjs/common';
+import { existsSync, mkdirSync } from 'fs';
 import path from 'path';
 import _ from 'lodash';
 import { rootPath } from './tools';
@@ -30,6 +31,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       useFactory: (configService: ConfigService) => {
         const database = configService.get<string>('cache.sqlite.database');
         const filePath = path.join(rootPath, database); // 绝对文件路径
+
+        // 自动创建文件夹
+        const sqlsPath = path.dirname(filePath);
+        existsSync(sqlsPath) || mkdirSync(sqlsPath);
+
         const keyvSqlite = new KeyvSqlite(filePath);
         return { store: keyvSqlite };
       },
